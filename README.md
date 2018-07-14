@@ -1,2 +1,2 @@
 # Tic-Tac-Toe-AI
-AI for Tic Tac Toe using the Minimax Algorithm. Recursive solution that goes through each child node until termination, alternating between the best and worst possible case. (hence the name minimax)
+AI for Tic Tac Toe using the Minimax Algorithm and Tkinter GUI. Recursive solution that goes through each child node until termination, alternating between the best and worst possible case (hence the name minimax). Alpha-beta pruning isn't necessary since the search space is so little, however when exanding this game to cover more squares (Ultimate Tic Tac Toe), it should be implemented. Easy AI just picks a random empty square. If on MacOs, plays John Cena when AI wins and Hello Darkness when it's a tie. Impossible to win unless you play against dumb AI. 
