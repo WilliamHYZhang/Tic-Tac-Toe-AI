@@ -4,21 +4,24 @@ import os
 import random
 #set up board
 game = [None] * 9
-# list of winning combinations
+#list of winning combinations
 winningCombos = [[0,1,2], [3,4,5], [6,7,8], [0,3,6], [1,4,7], [2,5,8], [0,4,8], [2,4,6]]
 AIfirst = False
+#if Ai is first, go in corner
 def init():
     global AIfirst
     # first move always in corner if AI first
     game[8] = 'X'
     draw()
     AIfirst = True
+#returns all the avaliable moves
 def availableMoves(node):
     movesArr = []
     for x in range(9):
         if None == node[x]:
             movesArr.append(x)
     return movesArr
+#checks if game has ended
 def terminate(node):
     full = True
     for x in range(9):
@@ -29,6 +32,7 @@ def terminate(node):
     if winner(node) != None:
         return True
     return False
+#returns winner, None if tie
 def winner(node):
     for player in ['X', 'O']:
         playerPositions = getSquares(player, node)
@@ -40,33 +44,42 @@ def winner(node):
             if win:
                 return player
     return None
+#get all the sqaures that the player is in
 def getSquares(player, node):
     squares = []
     for x in range(9):          
         if node[x] == player:
             squares.append(x)
     return squares
+#replaces empty element with player
 def makeMove(position, player, node):
     node[position] = player
+#minimax algo here
 def minimax(node, maxPlayer):
+    #if the game has ended, return the -1 if loss, 1 if win, 0 if tie, and the game board itself(node)
     if terminate(node):
         if winner(node) == 'X':
             return 1, node
         elif winner(node) == 'O':
             return -1, node
         return 0, node
+    #if best possible, initialize best as -1 and bestMove as None
     if maxPlayer:
         best = -1
         bestMove = None
+        #goes through each child node and calls minimax
         for move in availableMoves(node):
             makeMove(move, 'X', node)
             val, choice = minimax(node, False)
             makeMove(move, None, node)
+            #bestMove and best are updated if better than previous bests
             if val >= best:
                 bestMove = move
                 best = val
+        #returns accordingly
         return best, bestMove
     else:
+        #opposite as before
         best = 1
         bestMove = None
         for move in availableMoves(node):
@@ -77,14 +90,19 @@ def minimax(node, maxPlayer):
                 bestMove = move
                 best = val
         return best, bestMove
+#This is called when the player clicks on the screen
 def update(event):
     global game
+    #checks if AI has been given permission to go first
     if AIfirst:
+        #if yes, then when the player clicks on the screen make sure that Ai always has one more position than player
         if len(getSquares('X', game)) != len(getSquares('O', game)) +1:
             return
     else:
+        #else, make sure the amount of pieces for each player are the same
         if len(getSquares('X', game)) != len(getSquares('O', game)):
             return
+    #gets coord of mouse click and updates game board accordingly
     if event.x in range(10, 291) and event.y in range(10, 291):
         if game[0] == None:
             game[0] = 'O'
@@ -131,22 +149,28 @@ def update(event):
         else:
             return
     draw()
+    #if the game has ended, endgame() and return out of function
     if terminate(game):
         endgame()
         return 
     if easy.get() == 0:
+        #if didnt pick easy AI, call minimax
         outcome, bestMove = minimax(game, True)
         game[bestMove] = 'X'
     else:
+        #else, make a random move
         easyMove = randomMove(game)
         game[easyMove] = 'X'
     draw()
+    #check one more time for termination after AI has went
     if terminate(game):
         endgame()
         return
 def randomMove(game):
+    #random move for easy AI
     return random.choice(availableMoves(game))
 def draw():
+    #updates board on screen in Tkinter
     global game
     count = 0
     for x in range(150, 751, 300):
@@ -162,6 +186,7 @@ def draw():
             count += 1
     root.update()
 def endgame():
+    #determines and shows winners
     global game
     if winner(game) == 'X':
         messagebox.showerror('LOSER!', 'You lost!')
@@ -172,10 +197,12 @@ def endgame():
         messagebox.showerror('TIE', 'It was a tie!')
         os.system('afplay /VOLUMES/WILLIAM/helloDarkness.mp3')
 def restart():
+    #restarts the game, sets game board to all None again
     global game
     game = [None] * 9
     canvas.delete('Del')
     draw()
+#setup for Tkinter
 root = Tk()
 root.title('TicTacToe PRO')
 root.geometry('1200x1200')
