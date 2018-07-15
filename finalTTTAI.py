@@ -190,11 +190,13 @@ def endgame():
     global game
     if winner(game) == 'X':
         messagebox.showerror('LOSER!', 'You lost!')
+        #you can change this to play anything (only on Mac) get rid of this if on Windows
         os.system('afplay /VOLUMES/WILLIAM/johnCena.mp3')
     elif winner(game) == 'O':
         messagebox.showerror('NOOOOOB', 'You noob who picked easy AI!')
     else:
         messagebox.showerror('TIE', 'It was a tie!')
+        #you can change this to play anything (only on Mac) get rid of this if on Windows
         os.system('afplay /VOLUMES/WILLIAM/helloDarkness.mp3')
 def restart():
     #restarts the game, sets game board to all None again
